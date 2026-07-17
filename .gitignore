@@ -22,3 +22,14 @@ Thumbs.db
 
 # Python cache
 .pytest_cache/
+
+# ------------------------
+# Generated RAG artifacts
+# ------------------------
+
+data/wiki/chunks.jsonl
+data/wiki/embeddings.npy
+data/wiki/index.faiss
+
+# Generated outputs
+data/wiki/rag_results*.jsonl

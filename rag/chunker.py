@@ -1,15 +1,15 @@
 def chunk_documents(
     documents: list[dict[str, str]],
-    chunk_size: int = 300,
-    overlap: int = 50
+    chunk_size: int = 100,
+    overlap: int = 20
 ) -> list[dict[str, str]]:
     """
-    Split documents into smaller chunks, preferably ending at whitespace.
+    Split documents into word-based chunks.
 
     Input:
         documents: list of documents with title and content
-        chunk_size: max number of characters per chunk
-        overlap: number of overlapping characters between chunks
+        chunk_size: maximum number of words per chunk
+        overlap: number of overlapping words between adjacent chunks
 
     Output:
         list of chunks with title and content
@@ -18,34 +18,40 @@ def chunk_documents(
         raise ValueError("chunk_size must be positive")
 
     if overlap < 0 or overlap >= chunk_size:
-        raise ValueError("overlap must be non-negative and smaller than chunk_size")
+        raise ValueError(
+            "overlap must be non-negative and smaller than chunk_size"
+        )
 
-    chunks = []
+    chunks: list[dict[str, str]] = []
 
-    for doc in documents:
-        title = doc["title"]
-        text = doc["content"].strip()
+    for document in documents:
+        if "title" not in document or "content" not in document:
+            raise ValueError(
+                "each document must contain 'title' and 'content'"
+            )
 
-        start = 0
-        while start < len(text):
-            end = min(start + chunk_size, len(text))
+        title = document["title"].strip()
+        text = document["content"].strip()
 
-            if end < len(text):
-                space = text.rfind(" ", start, end)
-                if space > start:
-                    end = space
+        if not title or not text:
+            continue
 
-            chunk_text = text[start:end].strip()
+        words = text.split()
+        step = chunk_size - overlap
 
-            if chunk_text:
-                chunks.append({
-                    "title": title,
-                    "content": chunk_text
-                })
+        for start in range(0, len(words), step):
+            end = min(start + chunk_size, len(words))
+            chunk_words = words[start:end]
 
-            if end == len(text):
+            if not chunk_words:
+                continue
+
+            chunks.append({
+                "title": title,
+                "content": " ".join(chunk_words)
+            })
+
+            if end == len(words):
                 break
-
-            start = max(end - overlap, 0)
 
     return chunks
