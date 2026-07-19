@@ -1,0 +1,102 @@
+[
+  {
+    "id": "definition_01",
+    "category": "definition",
+    "question": "What is anarchism?"
+  },
+  {
+    "id": "geography_01",
+    "category": "geography",
+    "question": "Where is Alabama located?"
+  },
+  {
+    "id": "science_01",
+    "category": "science",
+    "question": "What is albedo?"
+  },
+  {
+    "id": "science_02",
+    "category": "science",
+    "question": "What is an atom?"
+  },
+  {
+    "id": "education_01",
+    "category": "education",
+    "question": "What is an academy?"
+  },
+  {
+    "id": "geography_02",
+    "category": "geography",
+    "question": "What is the capital of Alabama?"
+  },
+  {
+    "id": "geography_03",
+    "category": "geography",
+    "question": "What is the largest city in Alabama?"
+  },
+  {
+    "id": "history_01",
+    "category": "history",
+    "question": "Who was Abraham Lincoln?"
+  },
+  {
+    "id": "history_02",
+    "category": "history",
+    "question": "What was the American Civil War?"
+  },
+  {
+    "id": "philosophy_01",
+    "category": "philosophy",
+    "question": "Who was Aristotle?"
+  },
+  {
+    "id": "science_03",
+    "category": "science",
+    "question": "What is astronomy?"
+  },
+  {
+    "id": "science_04",
+    "category": "science",
+    "question": "What is an asteroid?"
+  },
+  {
+    "id": "computing_01",
+    "category": "computing",
+    "question": "What is an algorithm?"
+  },
+  {
+    "id": "computing_02",
+    "category": "computing",
+    "question": "What is artificial intelligence?"
+  },
+  {
+    "id": "computing_03",
+    "category": "computing",
+    "question": "What is ASCII?"
+  },
+  {
+    "id": "geography_04",
+    "category": "geography",
+    "question": "Where is Alaska located?"
+  },
+  {
+    "id": "geography_05",
+    "category": "geography",
+    "question": "What is Australia?"
+  },
+  {
+    "id": "space_01",
+    "category": "space",
+    "question": "What was Apollo 11?"
+  },
+  {
+    "id": "biology_01",
+    "category": "biology",
+    "question": "What is an animal?"
+  },
+  {
+    "id": "unanswerable_01",
+    "category": "unanswerable",
+    "question": "Who will be the first person to walk on Mars?"
+  }
+]

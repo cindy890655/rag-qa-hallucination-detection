@@ -1,4 +1,5 @@
 import torch
+from config import MAX_NEW_TOKENS
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 
@@ -29,7 +30,7 @@ class LocalGenerator:
     def generate(
         self,
         prompt: str,
-        max_new_tokens: int = 64
+        max_new_tokens: int =  MAX_NEW_TOKENS
     ) -> str:
         """
         Generate an answer from a RAG prompt.

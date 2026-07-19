@@ -58,7 +58,8 @@ Give one short factual sentence:
     def generate(
         self,
         question: str,
-        top_k: int = 3
+        top_k: int,
+        max_new_tokens: int
     ) -> dict:
         """
         Run the complete RAG pipeline.
@@ -68,6 +69,9 @@ Give one short factual sentence:
 
         if top_k <= 0:
             raise ValueError("top_k must be positive")
+        
+        if max_new_tokens <= 0:
+            raise ValueError("max_new_tokens must be positive")
 
         retrieved_chunks = self.retriever.retrieve(
             question=question,
@@ -79,7 +83,10 @@ Give one short factual sentence:
             retrieved_chunks=retrieved_chunks
         )
 
-        answer = self.generator.generate(prompt)
+        answer = self.generator.generate(
+            prompt=prompt,
+            max_new_tokens=max_new_tokens
+        )
 
         return {
             "question": question,
