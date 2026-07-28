@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
-data/*.json
+data/*.jsoncached_scores.json
+failure_cases.json
