@@ -1,0 +1,4 @@
+﻿top_k,total_questions,correct,partial,incorrect,correct_percent,partial_percent,incorrect_percent,mean_human_score,average_runtime_seconds,total_runtime_seconds
+1,20,11,8,1,55,40,5,0.5,0.376,7.5199
+3,20,17,1,2,85,5,10,0.75,0.7102,14.2042
+5,20,17,2,1,85,10,5,0.8,0.6193,12.3858

@@ -44,14 +44,28 @@ EMBEDDING_BATCH_SIZE = 32
 # ---------------------------------------------------------------------
 
 # Number of chunks retrieved for each question.
-TOP_K = 1
+TOP_K = 3
 
 
 # ---------------------------------------------------------------------
 # Generation
 # ---------------------------------------------------------------------
 
-GENERATOR_MODEL = "google/flan-t5-base"
+# ---------------------------------------------------------------------
+# Generation
+# ---------------------------------------------------------------------
+
+AVAILABLE_GENERATORS = {
+    "flan-base": "google/flan-t5-base",
+    "flan-large": "google/flan-t5-large",
+    "phi3": "microsoft/Phi-3-mini-4k-instruct",
+}
+
+# Select the generator model for the experiment.
+GENERATOR_NAME = "phi3"
+
+GENERATOR_MODEL = AVAILABLE_GENERATORS[GENERATOR_NAME]
+
 MAX_NEW_TOKENS = 64
 
 

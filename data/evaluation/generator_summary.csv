@@ -1,0 +1,4 @@
+model,correct,partial,incorrect,mean_human_score,average_runtime
+FLAN Base,11,5,4,0.675,0.7102099999999999
+FLAN Large,13,5,2,0.775,1.7399350000000002
+Phi-3,17,1,2,0.875,9.884250000000002

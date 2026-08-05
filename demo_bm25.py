@@ -1,5 +1,6 @@
 import json
 import time
+from pathlib import Path
 from typing import TextIO
 
 from config import (
@@ -7,55 +8,77 @@ from config import (
     CHUNK_OVERLAP,
     CHUNK_SIZE,
     EVALUATION_QUESTIONS_PATH,
-    EMBEDDING_MODEL,
     GENERATOR_MODEL,
-    INDEX_PATH,
     MAX_NEW_TOKENS,
-    RAG_RESULTS_PATH,
-    TOP_K
+    PROJECT_ROOT,
+    TOP_K,
 )
 
-from rag.embedder import TextEmbedder
+from rag.bm25_retriever import BM25Retriever
 from rag.generator import LocalGenerator
 from rag.pipeline import RAGPipeline
-from rag.wiki_retriever import WikipediaRetriever
 
 
-def load_questions(questions_path) -> list[dict]:
+BM25_RESULTS_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "wiki"
+    / f"rag_results_bm25_k{TOP_K}_tokens"
+      f"{MAX_NEW_TOKENS}.jsonl"
+)
+
+
+def load_questions(
+    questions_path: Path
+) -> list[dict]:
     """
     Load evaluation questions from a JSON file.
     """
     if not questions_path.exists():
         raise FileNotFoundError(
-            f"Question file not found: {questions_path}"
+            f"Question file not found: "
+            f"{questions_path}"
         )
 
     with questions_path.open(
         mode="r",
         encoding="utf-8"
     ) as input_file:
-        questions = json.load(input_file)
+        questions = json.load(
+            input_file
+        )
 
-    if not isinstance(questions, list) or not questions:
+    if (
+        not isinstance(questions, list)
+        or not questions
+    ):
         raise ValueError(
-            "The evaluation question file must contain a non-empty list"
+            "The evaluation question file "
+            "must contain a non-empty list"
         )
 
     for item in questions:
         if not isinstance(item, dict):
             raise ValueError(
-                "Each evaluation item must be a JSON object"
+                "Each evaluation item "
+                "must be a JSON object"
             )
 
-        if not item.get("question", "").strip():
+        if not item.get(
+            "question",
+            ""
+        ).strip():
             raise ValueError(
-                "Each evaluation item must contain a question"
+                "Each evaluation item "
+                "must contain a question"
             )
 
     return questions
 
 
-def print_result(result: dict) -> None:
+def print_result(
+    result: dict
+) -> None:
     """
     Print one RAG result in a readable format.
     """
@@ -74,13 +97,18 @@ def print_result(result: dict) -> None:
     ):
         print("\n" + "-" * 70)
         print(f"Rank: {rank}")
-        print(f"Title: {document['title']}")
+        print(
+            f"Title: {document['title']}"
+        )
 
         score = document.get("score")
+
         if score is not None:
             print(f"Score: {score:.4f}")
 
-        print(f"Content: {document['content']}")
+        print(
+            f"Content: {document['content']}"
+        )
 
 
 def save_result(
@@ -95,19 +123,23 @@ def save_result(
         output_file,
         ensure_ascii=False
     )
+
     output_file.write("\n")
 
-def add_experiment_config(result: dict) -> dict:
+
+def add_experiment_config(
+    result: dict
+) -> dict:
     """
-    Add the current experiment settings to one RAG result.
+    Add the current BM25 experiment settings.
     """
     result["experiment_config"] = {
+        "retrieval_method": "BM25",
         "top_k": TOP_K,
         "max_new_tokens": MAX_NEW_TOKENS,
         "chunk_size": CHUNK_SIZE,
         "chunk_overlap": CHUNK_OVERLAP,
-        "embedding_model": EMBEDDING_MODEL,
-        "generator_model": GENERATOR_MODEL
+        "generator_model": GENERATOR_MODEL,
     }
 
     return result
@@ -115,31 +147,34 @@ def add_experiment_config(result: dict) -> dict:
 
 def main() -> None:
     """
-    Run the Wikipedia RAG pipeline on the configured evaluation questions.
+    Run the Wikipedia RAG pipeline with BM25 retrieval.
     """
     evaluation_items = load_questions(
         EVALUATION_QUESTIONS_PATH
     )
 
     print("=" * 70)
-    print("WIKIPEDIA RAG EXPERIMENT")
+    print("WIKIPEDIA BM25 RAG EXPERIMENT")
     print("=" * 70)
-    print(f"Embedding model: {EMBEDDING_MODEL}")
-    print(f"Generator model: {GENERATOR_MODEL}")
+    print("Retrieval method: BM25")
+    print(
+        f"Generator model: {GENERATOR_MODEL}"
+    )
     print(f"Top-K: {TOP_K}")
     print(f"Chunk size: {CHUNK_SIZE}")
-    print(f"Chunk overlap: {CHUNK_OVERLAP}")
-    print(f"Max new tokens: {MAX_NEW_TOKENS}")
-    print(f"Number of questions: {len(evaluation_items)}")
-
-    embedder = TextEmbedder(
-        model_name=EMBEDDING_MODEL
+    print(
+        f"Chunk overlap: {CHUNK_OVERLAP}"
+    )
+    print(
+        f"Max new tokens: {MAX_NEW_TOKENS}"
+    )
+    print(
+        "Number of questions: "
+        f"{len(evaluation_items)}"
     )
 
-    retriever = WikipediaRetriever(
-        chunks_path=CHUNKS_PATH,
-        index_path=INDEX_PATH,
-        embedder=embedder
+    retriever = BM25Retriever(
+        chunks_path=CHUNKS_PATH
     )
 
     generator = LocalGenerator(
@@ -151,7 +186,7 @@ def main() -> None:
         generator=generator
     )
 
-    RAG_RESULTS_PATH.parent.mkdir(
+    BM25_RESULTS_PATH.parent.mkdir(
         parents=True,
         exist_ok=True
     )
@@ -159,7 +194,7 @@ def main() -> None:
     total_start_time = time.perf_counter()
     question_times: list[float] = []
 
-    with RAG_RESULTS_PATH.open(
+    with BM25_RESULTS_PATH.open(
         mode="w",
         encoding="utf-8"
     ) as output_file:
@@ -167,7 +202,9 @@ def main() -> None:
         for item in evaluation_items:
             question = item["question"]
 
-            question_start_time = time.perf_counter()
+            question_start_time = (
+                time.perf_counter()
+            )
 
             result = pipeline.generate(
                 question=question,
@@ -175,25 +212,36 @@ def main() -> None:
                 max_new_tokens=MAX_NEW_TOKENS
             )
 
-            question_end_time = time.perf_counter()
             elapsed_seconds = (
-                question_end_time - question_start_time
+                time.perf_counter()
+                - question_start_time
             )
 
-            question_times.append(elapsed_seconds)
+            question_times.append(
+                elapsed_seconds
+            )
 
-            result["question_id"] = item.get("id")
-            result["category"] = item.get("category")
+            result["question_id"] = item.get(
+                "id"
+            )
+
+            result["category"] = item.get(
+                "category"
+            )
+
             result["runtime_seconds"] = round(
                 elapsed_seconds,
                 4
             )
 
-            result = add_experiment_config(result)
+            result = add_experiment_config(
+                result
+            )
 
             print_result(result)
+
             print(
-                f"\nRuntime: "
+                "\nRuntime: "
                 f"{elapsed_seconds:.4f} seconds"
             )
 
@@ -202,26 +250,37 @@ def main() -> None:
                 output_file=output_file
             )
 
-    total_end_time = time.perf_counter()
-    total_runtime = total_end_time - total_start_time
+    total_runtime = (
+        time.perf_counter()
+        - total_start_time
+    )
 
     average_runtime = (
-        sum(question_times) / len(question_times)
+        sum(question_times)
+        / len(question_times)
         if question_times
         else 0.0
     )
 
     print("\n" + "=" * 70)
     print("ALL QUESTIONS COMPLETED")
-    print(f"Number of questions: {len(evaluation_items)}")
-    print(f"Total runtime: {total_runtime:.4f} seconds")
+    print(
+        "Number of questions: "
+        f"{len(evaluation_items)}"
+    )
+    print(
+        f"Total runtime: "
+        f"{total_runtime:.4f} seconds"
+    )
     print(
         "Average runtime per question: "
         f"{average_runtime:.4f} seconds"
     )
-    print(f"Results saved to: {RAG_RESULTS_PATH}")
+    print(
+        f"Results saved to: "
+        f"{BM25_RESULTS_PATH}"
+    )
     print("=" * 70)
-    
 
 
 if __name__ == "__main__":
