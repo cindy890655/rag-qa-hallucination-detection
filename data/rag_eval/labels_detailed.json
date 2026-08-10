@@ -1,0 +1,25 @@
+{
+  "description": "Two-layer human annotation of 20 RAG outputs (k3+phi3). Layer 1: binary faithfulness (0=faithful, 1=hallucinated) for detector comparison. Layer 2: fine-grained type for analysis.",
+  "labels": {
+    "What is anarchism?":                              {"faithful": 0, "type": "faithful-verbatim"},
+    "Where is Alabama located?":                       {"faithful": 0, "type": "faithful-supported"},
+    "What is albedo?":                                 {"faithful": 0, "type": "faithful-verbatim"},
+    "What is an atom?":                                {"faithful": 0, "type": "faithful-supported"},
+    "What is an academy?":                             {"faithful": 0, "type": "faithful-but-narrow"},
+    "What is the capital of Alabama?":                 {"faithful": 0, "type": "faithful-verbatim"},
+    "What is the largest city in Alabama?":            {"faithful": 0, "type": "faithful-verbatim"},
+    "Who was Abraham Lincoln?":                        {"faithful": 0, "type": "faithful-verbatim"},
+    "What was the American Civil War?":                {"faithful": 0, "type": "faithful-verbatim"},
+    "Who was Aristotle?":                              {"faithful": 0, "type": "faithful-verbatim"},
+    "What is astronomy?":                              {"faithful": 0, "type": "faithful-concept-shift"},
+    "What is an asteroid?":                            {"faithful": 0, "type": "faithful-verbatim"},
+    "What is an algorithm?":                           {"faithful": 0, "type": "faithful-verbatim"},
+    "What is artificial intelligence?":                {"faithful": 0, "type": "faithful-verbatim"},
+    "What is ASCII?":                                  {"faithful": 0, "type": "faithful-verbatim"},
+    "Where is Alaska located?":                        {"faithful": 0, "type": "faithful-verbatim"},
+    "What is Australia?":                              {"faithful": 1, "type": "hallucination-entity-confusion"},
+    "What was Apollo 11?":                             {"faithful": 0, "type": "faithful-verbatim"},
+    "What is an animal?":                              {"faithful": 0, "type": "faithful-verbatim"},
+    "Who will be the first person to walk on Mars?":   {"faithful": 0, "type": "appropriate-refusal"}
+  }
+}

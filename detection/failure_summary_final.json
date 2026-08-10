@@ -1,0 +1,6 @@
+{
+  "threshold": 0.5,
+  "false_positives_count": 8,
+  "false_negatives_count": 86,
+  "total_errors": 94
+}

@@ -1,7 +1,7 @@
 from load_data import load_halueval_qa
 
 
-def build_samples(data):
+def build_samples(data: list) -> list:
     """
     Convert each HaluEval QA record into two labeled samples.
     Input: data - list of records, each with keys

@@ -11,7 +11,7 @@ def main():
     data = load_halueval_qa("data/qa_data.json")
     samples = build_samples(data)
 
-    N = 400                      # same subset size as before, keep it comparable
+    N = 2000                      # same subset size as before, keep it comparable
     subset = samples[:N]
     print(f"Re-scoring {len(subset)} samples with the current model (slow part)...")
 

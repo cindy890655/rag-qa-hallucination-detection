@@ -42,24 +42,6 @@ class HallucinationDetector:
         label = 1 if p_contra >= threshold else 0
         return label, p_contra
 
-
-    def detect_fusion(self, knowledge, question, answer,
-                      contra_threshold=0.5, entail_threshold=0.3):
-        """
-        Fusion detector (improved). Combines two complementary signals:
-          - high contradiction  -> the evidence refutes the answer
-          - low entailment       -> the evidence does not support the answer
-        Flag as hallucinated (1) if EITHER condition holds:
-            contradiction >= contra_threshold  OR  entailment < entail_threshold
-        Returns (label, {"contradiction":..., "entailment":...}).
-        """
-        sc = self.scores(knowledge, question, answer)
-        p_contra = sc.get("contradiction", 0.0)
-        p_entail = sc.get("entailment", 0.0)
-        label = 1 if (p_contra >= contra_threshold or p_entail < entail_threshold) else 0
-        return label, {"contradiction": p_contra, "entailment": p_entail}
-
-
 # quick check on a few examples
 if __name__ == "__main__":
     detector = HallucinationDetector()
