@@ -164,7 +164,7 @@ answers labelled unsupported:
 | not-in-evidence — fabricated | 2 | 12% |
 | contradicted — the evidence states the opposite | 1 | 6% |
 
-Only 18% are fabrications or contradictions. **82% are true fragments assembled
+Only 19% are fabrications or contradictions. **81% are true fragments assembled
 incorrectly** — a year that appears in the passage under a different event, an award
 name taken from another article. NLI entailment is built to catch the first kind. This
 also explains the earlier finding that contradiction carries no signal here: RAG
