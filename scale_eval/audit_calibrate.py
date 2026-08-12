@@ -54,6 +54,28 @@ def wilson(successes: int, total: int) -> tuple[float, float]:
 
     return (max(0.0, centre - spread), min(1.0, centre + spread))
 
+def correct_prevalence(observed: float, recall: float, fpr: float) -> float:
+    """
+    Recover the true prevalence from a screening test's observed positive rate.
+
+    A detector with true positive rate `recall` and false positive rate `fpr`
+    flags a fraction observed = recall * p + fpr * (1 - p) of a population whose
+    true prevalence is p. Inverting that gives the estimator below, which is
+    standard in screening. It is only meaningful when recall > fpr, which the
+    negative control establishes independently.
+
+    The result is clipped to [0, 1]: sampling noise in `observed` can otherwise
+    push the estimate outside the range, and a rate below zero or above one is
+    not a rate.
+    """
+    if recall <= fpr:
+        raise ValueError(
+            "recall must exceed the false positive rate for the correction to "
+            f"carry information (got recall={recall}, fpr={fpr})"
+        )
+
+    return min(1.0, max(0.0, (observed - fpr) / (recall - fpr)))
+
 
 def load_labels() -> dict[str, int]:
     if not LABEL_CSV.exists():
@@ -218,7 +240,7 @@ def main() -> None:
     corrected = {}
     for config, metrics in summary["metrics"].items():
         observed = metrics["hallucination_rate"]
-        estimate = min(1.0, max(0.0, (observed - fpr) / (recall - fpr)))
+        estimate = correct_prevalence(observed, recall, fpr)
         corrected[config] = estimate
         print(f"{config:<22}{observed:<16.1%}{estimate:<14.1%}"
               f"{estimate - observed:+.1%}")
