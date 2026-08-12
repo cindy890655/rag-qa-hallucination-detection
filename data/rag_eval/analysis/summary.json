@@ -1,0 +1,159 @@
+{
+  "threshold": 0.48,
+  "target_control_recall": 0.9,
+  "rule": "hallucinated when max entailment over retrieved chunks < 0.48",
+  "metrics": {
+    "phi3_k1_tok64": {
+      "n_answerable": 200,
+      "abstention_rate": 0.29,
+      "n_answered": 142,
+      "hallucination_rate": 0.2323943661971831,
+      "hallucination_ci_low": 0.17053347753691167,
+      "hallucination_ci_high": 0.3083532050008553,
+      "grounded_answer_rate": 0.545,
+      "grounded_ci_low": 0.4757848503696115,
+      "grounded_ci_high": 0.6125190090977398,
+      "chunk_hit_rate": 0.51,
+      "flag_when_retrieval_hit": 0.08,
+      "flag_when_retrieval_miss": 0.5952380952380952,
+      "control_flag_rate": 0.9567901234567902,
+      "real_flag_rate": 0.21604938271604937,
+      "unanswerable_abstention_rate": 0.5,
+      "unanswerable_flag_rate": 0.1
+    },
+    "phi3_k3_tok64": {
+      "n_answerable": 200,
+      "abstention_rate": 0.23,
+      "n_answered": 154,
+      "hallucination_rate": 0.14285714285714285,
+      "hallucination_ci_low": 0.096270487754252,
+      "hallucination_ci_high": 0.2068283150962006,
+      "grounded_answer_rate": 0.66,
+      "grounded_ci_low": 0.5918836703220929,
+      "grounded_ci_high": 0.7220856077840445,
+      "chunk_hit_rate": 0.695,
+      "flag_when_retrieval_hit": 0.09230769230769231,
+      "flag_when_retrieval_miss": 0.4166666666666667,
+      "control_flag_rate": 0.9277777777777778,
+      "real_flag_rate": 0.14444444444444443,
+      "unanswerable_abstention_rate": 0.35,
+      "unanswerable_flag_rate": 0.15384615384615385
+    },
+    "phi3_k5_tok64": {
+      "n_answerable": 200,
+      "abstention_rate": 0.425,
+      "n_answered": 115,
+      "hallucination_rate": 0.14782608695652175,
+      "hallucination_ci_low": 0.0943894011574522,
+      "hallucination_ci_high": 0.2240310845983774,
+      "grounded_answer_rate": 0.49,
+      "grounded_ci_low": 0.4215615528275274,
+      "grounded_ci_high": 0.5588153672908391,
+      "chunk_hit_rate": 0.775,
+      "flag_when_retrieval_hit": 0.1188118811881188,
+      "flag_when_retrieval_miss": 0.35714285714285715,
+      "control_flag_rate": 0.8540145985401459,
+      "real_flag_rate": 0.1386861313868613,
+      "unanswerable_abstention_rate": 0.45,
+      "unanswerable_flag_rate": 0.09090909090909091
+    },
+    "flan-base_k3_tok64": {
+      "n_answerable": 200,
+      "abstention_rate": 0.02,
+      "n_answered": 196,
+      "hallucination_rate": 0.25510204081632654,
+      "hallucination_ci_low": 0.1991875308504722,
+      "hallucination_ci_high": 0.3204320078241581,
+      "grounded_answer_rate": 0.73,
+      "grounded_ci_low": 0.664564384587978,
+      "grounded_ci_high": 0.7867664526895944,
+      "chunk_hit_rate": 0.695,
+      "flag_when_retrieval_hit": 0.10071942446043165,
+      "flag_when_retrieval_miss": 0.631578947368421,
+      "control_flag_rate": 0.9012875536480687,
+      "real_flag_rate": 0.27467811158798283,
+      "unanswerable_abstention_rate": 0.075,
+      "unanswerable_flag_rate": 0.3783783783783784
+    },
+    "flan-large_k3_tok64": {
+      "n_answerable": 200,
+      "abstention_rate": 0.135,
+      "n_answered": 173,
+      "hallucination_rate": 0.15028901734104047,
+      "hallucination_ci_low": 0.10467090078416763,
+      "hallucination_ci_high": 0.2111009538020836,
+      "grounded_answer_rate": 0.735,
+      "grounded_ci_low": 0.6698229773344888,
+      "grounded_ci_high": 0.7913193998839003,
+      "chunk_hit_rate": 0.695,
+      "flag_when_retrieval_hit": 0.08270676691729323,
+      "flag_when_retrieval_miss": 0.375,
+      "control_flag_rate": 0.8939393939393939,
+      "real_flag_rate": 0.15151515151515152,
+      "unanswerable_abstention_rate": 0.375,
+      "unanswerable_flag_rate": 0.16
+    },
+    "phi3_k3_tok128": {
+      "n_answerable": 200,
+      "abstention_rate": 0.23,
+      "n_answered": 154,
+      "hallucination_rate": 0.14285714285714285,
+      "hallucination_ci_low": 0.096270487754252,
+      "hallucination_ci_high": 0.2068283150962006,
+      "grounded_answer_rate": 0.66,
+      "grounded_ci_low": 0.5918836703220929,
+      "grounded_ci_high": 0.7220856077840445,
+      "chunk_hit_rate": 0.695,
+      "flag_when_retrieval_hit": 0.09230769230769231,
+      "flag_when_retrieval_miss": 0.4166666666666667,
+      "control_flag_rate": 0.9277777777777778,
+      "real_flag_rate": 0.14444444444444443,
+      "unanswerable_abstention_rate": 0.35,
+      "unanswerable_flag_rate": 0.15384615384615385
+    }
+  },
+  "paired_comparisons": [
+    {
+      "a": "phi3_k1_tok64",
+      "b": "phi3_k3_tok64",
+      "a_only": 10,
+      "b_only": 33,
+      "p_value": 0.0006061066312668117
+    },
+    {
+      "a": "phi3_k3_tok64",
+      "b": "phi3_k5_tok64",
+      "a_only": 45,
+      "b_only": 11,
+      "p_value": 5.37831811014966e-06
+    },
+    {
+      "a": "phi3_k1_tok64",
+      "b": "phi3_k5_tok64",
+      "a_only": 43,
+      "b_only": 32,
+      "p_value": 0.24804574189252784
+    },
+    {
+      "a": "flan-base_k3_tok64",
+      "b": "phi3_k3_tok64",
+      "a_only": 17,
+      "b_only": 3,
+      "p_value": 0.0025768280029296875
+    },
+    {
+      "a": "flan-base_k3_tok64",
+      "b": "flan-large_k3_tok64",
+      "a_only": 7,
+      "b_only": 8,
+      "p_value": 1.0
+    },
+    {
+      "a": "phi3_k3_tok64",
+      "b": "phi3_k3_tok128",
+      "a_only": 0,
+      "b_only": 0,
+      "p_value": 1.0
+    }
+  ]
+}

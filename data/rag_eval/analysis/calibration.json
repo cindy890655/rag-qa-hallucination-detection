@@ -1,0 +1,51 @@
+{
+  "threshold": 0.48,
+  "n_labelled": 30,
+  "population_strata": {
+    "clean_hit": 251,
+    "flagged": 129,
+    "clean_miss": 121
+  },
+  "sampled_strata": {
+    "clean_hit": 8,
+    "flagged": 15,
+    "clean_miss": 7
+  },
+  "weights": {
+    "clean_hit": 31.375,
+    "flagged": 8.6,
+    "clean_miss": 17.285714285714285
+  },
+  "precision": 0.7333333333333333,
+  "precision_ci": [
+    0.4804911034231324,
+    0.8910272389681718
+  ],
+  "recall": 0.4521834135682337,
+  "specificity": 0.8821081491273164,
+  "false_positive_rate": 0.11789185087268367,
+  "f1": 0.5594204735052482,
+  "prevalence_estimate": 0.41757912745936704,
+  "weighted_confusion": {
+    "tp": 94.59999999999998,
+    "fp": 34.4,
+    "fn": 114.60714285714286,
+    "tn": 257.3928571428571
+  },
+  "corrected_hallucination_rate": {
+    "phi3_k1_tok64": 0.3425228994749727,
+    "phi3_k3_tok64": 0.07468119082381947,
+    "phi3_k5_tok64": 0.08954529346318003,
+    "flan-base_k3_tok64": 0.41045065223080296,
+    "flan-large_k3_tok64": 0.0969129050315336,
+    "phi3_k3_tok128": 0.07468119082381947
+  },
+  "failure_types": {
+    "wrong-context": 4,
+    "off-target": 2,
+    "partly-supported": 4,
+    "not-in-evidence": 2,
+    "cross-chunk": 3,
+    "contradicted": 1
+  }
+}

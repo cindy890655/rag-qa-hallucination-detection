@@ -1,20 +1,28 @@
 """
-Compute ROC-AUC and PR-AUC for the hallucination detector,
-using the cached NLI scores. The contradiction probability is the
-continuous score; label 1 = hallucinated, label 0 = faithful.
+Compute ROC-AUC and PR-AUC for the hallucination detector, using the cached NLI
+scores. The contradiction probability is the continuous score; label 1 =
+hallucinated, label 0 = faithful.
 """
 import json
-from sklearn.metrics import roc_auc_score, average_precision_score, roc_curve, precision_recall_curve
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+from sklearn.metrics import (average_precision_score, precision_recall_curve,
+                             roc_auc_score, roc_curve)
 
-CACHE = '/Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/cached_scores.json'
+ROOT = Path(__file__).resolve().parent.parent
+CACHE = ROOT / "cached_scores.json"
+FIGURES = Path(__file__).resolve().parent / "figures"
 
-cache = json.load(open(CACHE))
-all_scores = cache['all_scores']
-y_true = cache['y_true']
+if not CACHE.exists():
+    raise SystemExit(f"Missing {CACHE}. Run detection/rescore.py first.")
+
+cache = json.load(CACHE.open(encoding="utf-8"))
+all_scores = cache["all_scores"]
+y_true = cache["y_true"]
 
 # continuous score = contradiction probability (higher = more likely hallucinated)
-y_score = [s['contradiction'] for s in all_scores]
+y_score = [s["contradiction"] for s in all_scores]
 
 roc_auc = roc_auc_score(y_true, y_score)
 pr_auc = average_precision_score(y_true, y_score)
@@ -49,5 +57,8 @@ ax2.set_title("Precision-Recall Curve")
 ax2.legend(loc="lower left")
 
 plt.tight_layout()
-plt.savefig("auc_curves.png", dpi=200, bbox_inches="tight")
-print("\nSaved auc_curves.png")
+
+FIGURES.mkdir(parents=True, exist_ok=True)
+output = FIGURES / "auc_curves.png"
+plt.savefig(output, dpi=200, bbox_inches="tight")
+print(f"\nSaved {output}")

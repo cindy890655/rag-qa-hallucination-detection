@@ -1,0 +1,206 @@
+=== phi3 k=3 tok=64 ===
+
+CONFIG phi3_k3_tok64: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+FastGenerator ready: microsoft/Phi-3-mini-4k-instruct on mps (torch.float16)
+  10/240  4.2s/question  ~16 min left
+  20/240  3.1s/question  ~11 min left
+  30/240  2.9s/question  ~10 min left
+  40/240  2.7s/question  ~9 min left
+  50/240  2.6s/question  ~8 min left
+  60/240  2.5s/question  ~8 min left
+  70/240  2.4s/question  ~7 min left
+  80/240  2.4s/question  ~6 min left
+  90/240  2.3s/question  ~6 min left
+  100/240  2.3s/question  ~5 min left
+  110/240  2.2s/question  ~5 min left
+  120/240  2.2s/question  ~4 min left
+  130/240  2.2s/question  ~4 min left
+  140/240  2.2s/question  ~4 min left
+  150/240  2.2s/question  ~3 min left
+  160/240  2.2s/question  ~3 min left
+  170/240  2.3s/question  ~3 min left
+  180/240  2.3s/question  ~2 min left
+  190/240  2.3s/question  ~2 min left
+  200/240  2.3s/question  ~2 min left
+  210/240  2.3s/question  ~1 min left
+  220/240  2.5s/question  ~1 min left
+  230/240  2.5s/question  ~0 min left
+  240/240  2.5s/question  ~0 min left
+
+CONFIG phi3_k3_tok64 finished in 10.1 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_phi3_k3_tok64.jsonl
+=== phi3 k=1 tok=64 ===
+
+CONFIG phi3_k1_tok64: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+FastGenerator ready: microsoft/Phi-3-mini-4k-instruct on mps (torch.float16)
+  10/240  2.2s/question  ~8 min left
+  20/240  1.9s/question  ~7 min left
+  30/240  2.0s/question  ~7 min left
+  40/240  1.8s/question  ~6 min left
+  50/240  1.8s/question  ~6 min left
+  60/240  1.8s/question  ~5 min left
+  70/240  1.8s/question  ~5 min left
+  80/240  1.8s/question  ~5 min left
+  90/240  1.8s/question  ~5 min left
+  100/240  1.8s/question  ~4 min left
+  110/240  1.8s/question  ~4 min left
+  120/240  1.8s/question  ~4 min left
+  130/240  1.8s/question  ~3 min left
+  140/240  1.8s/question  ~3 min left
+  150/240  1.7s/question  ~3 min left
+  160/240  1.8s/question  ~2 min left
+  170/240  1.8s/question  ~2 min left
+  180/240  1.8s/question  ~2 min left
+  190/240  1.8s/question  ~1 min left
+  200/240  1.8s/question  ~1 min left
+  210/240  1.8s/question  ~1 min left
+  220/240  2.9s/question  ~1 min left
+  230/240  3.2s/question  ~1 min left
+  240/240  3.1s/question  ~0 min left
+
+CONFIG phi3_k1_tok64 finished in 12.6 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_phi3_k1_tok64.jsonl
+=== phi3 k=5 tok=64 ===
+
+CONFIG phi3_k5_tok64: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+FastGenerator ready: microsoft/Phi-3-mini-4k-instruct on mps (torch.float16)
+  10/240  7.6s/question  ~29 min left
+  20/240  4.7s/question  ~17 min left
+  30/240  3.9s/question  ~14 min left
+  40/240  3.5s/question  ~12 min left
+  50/240  3.2s/question  ~10 min left
+  60/240  3.0s/question  ~9 min left
+  70/240  2.9s/question  ~8 min left
+  80/240  2.8s/question  ~7 min left
+  90/240  2.7s/question  ~7 min left
+  100/240  2.7s/question  ~6 min left
+  110/240  2.7s/question  ~6 min left
+  120/240  2.7s/question  ~5 min left
+  130/240  2.7s/question  ~5 min left
+  140/240  2.6s/question  ~4 min left
+  150/240  2.6s/question  ~4 min left
+  160/240  2.5s/question  ~3 min left
+  170/240  2.5s/question  ~3 min left
+  180/240  2.5s/question  ~2 min left
+  190/240  2.5s/question  ~2 min left
+  200/240  2.5s/question  ~2 min left
+  210/240  2.5s/question  ~1 min left
+  220/240  2.7s/question  ~1 min left
+  230/240  2.7s/question  ~0 min left
+  240/240  2.7s/question  ~0 min left
+
+CONFIG phi3_k5_tok64 finished in 10.7 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_phi3_k5_tok64.jsonl
+=== flan-base k=3 tok=64 ===
+
+CONFIG flan-base_k3_tok64: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+[transformers] The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints with different values, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning.
+FastGenerator ready: google/flan-t5-base on cpu (torch.float32)
+  10/240  0.9s/question  ~3 min left
+  20/240  0.8s/question  ~3 min left
+  30/240  0.7s/question  ~2 min left
+  40/240  0.7s/question  ~2 min left
+  50/240  0.7s/question  ~2 min left
+  60/240  0.7s/question  ~2 min left
+  70/240  0.7s/question  ~2 min left
+  80/240  0.7s/question  ~2 min left
+  90/240  0.7s/question  ~2 min left
+  100/240  0.7s/question  ~2 min left
+  110/240  0.7s/question  ~1 min left
+  120/240  0.7s/question  ~1 min left
+  130/240  0.7s/question  ~1 min left
+  140/240  0.7s/question  ~1 min left
+  150/240  0.7s/question  ~1 min left
+  160/240  0.7s/question  ~1 min left
+  170/240  0.7s/question  ~1 min left
+  180/240  0.7s/question  ~1 min left
+  190/240  0.7s/question  ~1 min left
+  200/240  0.7s/question  ~0 min left
+  210/240  0.7s/question  ~0 min left
+  220/240  0.7s/question  ~0 min left
+  230/240  0.7s/question  ~0 min left
+  240/240  0.7s/question  ~0 min left
+
+CONFIG flan-base_k3_tok64 finished in 2.7 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_flan-base_k3_tok64.jsonl
+=== phi3 k=3 tok=128 ===
+
+CONFIG phi3_k3_tok128: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+FastGenerator ready: microsoft/Phi-3-mini-4k-instruct on mps (torch.float16)
+  10/240  4.5s/question  ~17 min left
+  20/240  3.4s/question  ~12 min left
+  30/240  3.0s/question  ~10 min left
+  40/240  2.7s/question  ~9 min left
+  50/240  2.8s/question  ~9 min left
+  60/240  2.6s/question  ~8 min left
+  70/240  2.5s/question  ~7 min left
+  80/240  2.5s/question  ~7 min left
+  90/240  2.4s/question  ~6 min left
+  100/240  2.4s/question  ~6 min left
+  110/240  2.3s/question  ~5 min left
+  120/240  2.3s/question  ~5 min left
+  130/240  2.3s/question  ~4 min left
+  140/240  2.3s/question  ~4 min left
+  150/240  2.3s/question  ~3 min left
+  160/240  2.3s/question  ~3 min left
+  170/240  2.3s/question  ~3 min left
+  180/240  2.3s/question  ~2 min left
+  190/240  2.3s/question  ~2 min left
+  200/240  2.3s/question  ~2 min left
+  210/240  2.4s/question  ~1 min left
+  220/240  2.4s/question  ~1 min left
+  230/240  2.4s/question  ~0 min left
+  240/240  2.5s/question  ~0 min left
+
+CONFIG phi3_k3_tok128 finished in 9.8 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_phi3_k3_tok128.jsonl
+=== flan-large k=3 tok=64 ===
+
+CONFIG flan-large_k3_tok64: 240 of 240 to run
+Loading Wikipedia chunks...
+Loading FAISS index...
+Wikipedia retriever loaded: 390,742 chunks
+[transformers] The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints with different values, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning.
+FastGenerator ready: google/flan-t5-large on cpu (torch.float32)
+  10/240  2.0s/question  ~8 min left
+  20/240  2.1s/question  ~8 min left
+  30/240  2.0s/question  ~7 min left
+  40/240  2.0s/question  ~7 min left
+  50/240  2.0s/question  ~6 min left
+  60/240  2.0s/question  ~6 min left
+  70/240  2.0s/question  ~6 min left
+  80/240  2.0s/question  ~5 min left
+  90/240  2.0s/question  ~5 min left
+  100/240  2.0s/question  ~5 min left
+  110/240  2.0s/question  ~4 min left
+  120/240  2.0s/question  ~4 min left
+  130/240  2.0s/question  ~4 min left
+  140/240  2.0s/question  ~3 min left
+  150/240  2.0s/question  ~3 min left
+  160/240  2.0s/question  ~3 min left
+  170/240  2.1s/question  ~2 min left
+  180/240  2.1s/question  ~2 min left
+  190/240  2.1s/question  ~2 min left
+  200/240  2.1s/question  ~1 min left
+  210/240  2.1s/question  ~1 min left
+  220/240  2.1s/question  ~1 min left
+  230/240  2.1s/question  ~0 min left
+  240/240  2.1s/question  ~0 min left
+
+CONFIG flan-large_k3_tok64 finished in 8.6 min (0 failures)
+  -> /Users/yefanhe/Desktop/nlp/final project/hallucination-detection part/data/rag_eval/grid/rag_flan-large_k3_tok64.jsonl
