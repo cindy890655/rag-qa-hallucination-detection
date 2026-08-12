@@ -1,3 +1,10 @@
+"""
+Load the HaluEval QA benchmark file.
+
+The file is JSON Lines, not a JSON array: each line is one independent record
+with keys knowledge / question / right_answer / hallucinated_answer. Reading it
+line by line is therefore deliberate, not a workaround.
+"""
 import json
 
 

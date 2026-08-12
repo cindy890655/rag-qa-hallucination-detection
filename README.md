@@ -296,7 +296,6 @@ data/rag_eval/
   labels_detailed.json     20 pilot labels on the teammate's original output
 
 agreement_eval.py          detector vs the 20 pilot labels
-archive/                   superseded scripts, kept for the record
 ```
 
 ## How to run

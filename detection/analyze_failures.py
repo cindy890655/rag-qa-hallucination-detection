@@ -1,3 +1,18 @@
+"""
+Categorise the detector's mistakes on the benchmark.
+
+Writes every error to failure_cases.json and prints a few of each kind, which is
+where the three failure categories in the report came from: multi-hop questions
+wrongly flagged, paraphrases wrongly flagged, and - dominant by count -
+hallucinations the knowledge fails to support but does not explicitly refute.
+
+That last category is the reason the fusion rule exists, and the reason the
+contradiction signal alone was never going to be enough.
+
+Run from the project root, since it reads data/ and cached_scores.json:
+    python3 detection/analyze_failures.py
+"""
+
 import json
 from load_data import load_halueval_qa
 from prepare_data import build_samples
@@ -17,6 +32,7 @@ def best_threshold(contra_probs, y_true):
 
 
 def main():
+    """Apply the F1-optimal threshold, split the errors, print and save them."""
     # ---- load the cache written by tune_threshold.py ----
     with open("cached_scores.json") as f:
         cache = json.load(f)
@@ -51,6 +67,7 @@ def main():
           f"(false positives: {len(false_pos)}, false negatives: {len(false_neg)})\n")
 
     def show(title, cases, k=3):
+        """Print up to k example errors with enough text to judge them by hand."""
         print(f"===== {title} (showing up to {k}) =====")
         for smp, p in cases[:k]:
             print(f"[P(contradiction)={p:.2f}]")

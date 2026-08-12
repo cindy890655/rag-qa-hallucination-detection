@@ -1,3 +1,11 @@
+"""
+Connectivity check for the Groq API.
+
+Not a unit test despite the name: it makes a real API call to confirm the key is
+set and the model is reachable before a long judging run is started. The unit
+tests live in tests/.
+"""
+
 import os
 from openai import OpenAI
 

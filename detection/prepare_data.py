@@ -1,3 +1,13 @@
+"""
+Turn HaluEval records into labelled samples.
+
+Each record carries both a correct and a hallucinated answer to the same
+question, so it expands into two samples that share a premise and differ only in
+the answer. That pairing is what makes the resulting set exactly balanced, which
+is why chance accuracy is 0.500 throughout the report and why Gemini Flash-Lite's
+0.511 is read as no better than guessing.
+"""
+
 from load_data import load_halueval_qa
 
 

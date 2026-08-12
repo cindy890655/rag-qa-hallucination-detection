@@ -1,3 +1,19 @@
+"""
+Sweep the contradiction threshold and compare against the argmax rule.
+
+The baseline here is the obvious rule: call an answer hallucinated when
+contradiction is the top NLI class. The sweep asks whether an explicit threshold
+does better, and by how much. Both are computed from cached_scores.json, so no
+model is loaded and the two are compared on identical samples.
+
+The threshold this picks is F1-optimal on this subset, which is exactly the kind
+of fit that failed to transfer to RAG output later; see the report's discussion
+of recalibration.
+
+Run from the project root:
+    python3 detection/tune_threshold.py
+"""
+
 import json
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
