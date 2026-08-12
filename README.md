@@ -36,14 +36,23 @@ hallucinated answer, expanded into 20,000 labelled samples; the first 2,000 are 
 |---|---|---|---|---|---|
 | NLI single (contradiction ≥ 0.5) | 2000 | 0.741 | 0.910 | 0.535 | 0.674 |
 | NLI fusion (contra ≥ 0.5 or entail < 0.3) | 2000 | 0.770 | 0.851 | 0.656 | 0.741 |
-| Gemini Flash-Lite judge | 496 | 0.508 | — | — | 0.619 |
-| Llama 3.3 70B judge | 446 | 0.771 | — | — | 0.771 |
+| Gemini Flash-Lite judge | 496 | 0.508 | 0.505 | 0.798 | 0.619 |
+| Llama 3.3 70B judge | 446 | 0.771 | 0.771 | 0.771 | 0.771 |
 
 Threshold-independent, on the contradiction score: **ROC-AUC 0.794, PR-AUC 0.843**.
 
-Adding the entailment signal to the contradiction baseline raises recall from 0.535
-to 0.656 at a modest cost in precision. Flash-Lite performs at chance and is not a
-usable judge; Llama 3.3 70B matches NLI fusion.
+Adding the entailment signal to the contradiction baseline recovers 121 hallucinations
+the baseline missed at the cost of 62 additional false alarms, moving recall from 0.535
+to 0.656 and precision from 0.910 to 0.851. The fusion rule fires on contradiction or
+low entailment, so it is a strict superset of the baseline and cannot lose a detection;
+the entire cost appears as false alarms.
+
+Flash-Lite is not a usable judge. Its accuracy of 0.508 is chance on a balanced set,
+and its precision of 0.505 confirms it: with a recall of 0.798 it is calling almost
+everything a hallucination rather than discriminating. Llama 3.3 70B matches NLI
+fusion, and a paired comparison on the 446 samples all four methods share puts them at
+0.771 each with no distinguishable difference (McNemar p = 1.0), while both are far
+ahead of Flash-Lite (p = 2.2e-17).
 
 ## Part 2 — Scaled automatic evaluation of the RAG system
 
