@@ -24,6 +24,7 @@ Outputs
     data/rag_eval/analysis/config_metrics.csv
     data/rag_eval/analysis/summary.json
 """
+import argparse
 import csv
 import json
 import math
@@ -47,6 +48,7 @@ CONFIG_ORDER = [
     "flan-base_k3_tok64",
     "flan-large_k3_tok64",
     "phi3_k3_tok128",
+    "phi3_k3_tok64_bm25",
 ]
 
 
@@ -212,10 +214,28 @@ def mcnemar(a: dict[str, bool], b: dict[str, bool]) -> tuple[int, int, float]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--threshold", type=float, default=None,
+        help="use this threshold instead of calibrating. Pass the value "
+             "already in use when a configuration is added later: re-deriving "
+             "it would move the operating point for every configuration at "
+             "once, leaving the comparison confounded with a change of "
+             "measurement, and would invalidate the audit sample, which was "
+             "drawn according to the verdicts at the old value.")
+    args = parser.parse_args()
+
     ANALYSIS_DIR.mkdir(parents=True, exist_ok=True)
 
     configs = load_scored()
-    threshold = calibrate(configs)
+
+    if args.threshold is None:
+        threshold = calibrate(configs)
+    else:
+        threshold = args.threshold
+        print("=" * 78)
+        print(f"THRESHOLD FIXED AT {threshold:.2f} (calibration skipped)")
+        print("=" * 78)
 
     present = [c for c in CONFIG_ORDER if c in configs]
     present += [c for c in configs if c not in CONFIG_ORDER]
@@ -273,6 +293,7 @@ def main() -> None:
         ("flan-base_k3_tok64", "phi3_k3_tok64"),
         ("flan-base_k3_tok64", "flan-large_k3_tok64"),
         ("phi3_k3_tok64", "phi3_k3_tok128"),
+        ("phi3_k3_tok64", "phi3_k3_tok64_bm25"),
     ]
 
     print(f"{'comparison':<46}{'A only':<9}{'B only':<9}{'p':<12}{'verdict'}")

@@ -27,6 +27,7 @@ SHORT_NAME = {
     "flan-base_k3_tok64": "FLAN-base\nk=3",
     "flan-large_k3_tok64": "FLAN-large\nk=3",
     "phi3_k3_tok128": "Phi-3\nk=3, 128tok",
+    "phi3_k3_tok64_bm25": "BM25\nk=3",
 }
 
 

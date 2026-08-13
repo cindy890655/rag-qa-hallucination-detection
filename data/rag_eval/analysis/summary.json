@@ -110,6 +110,24 @@
       "real_flag_rate": 0.14444444444444443,
       "unanswerable_abstention_rate": 0.35,
       "unanswerable_flag_rate": 0.15384615384615385
+    },
+    "phi3_k3_tok64_bm25": {
+      "n_answerable": 200,
+      "abstention_rate": 0.125,
+      "n_answered": 175,
+      "hallucination_rate": 0.10285714285714286,
+      "hallucination_ci_low": 0.06605651863716205,
+      "hallucination_ci_high": 0.15671939032361665,
+      "grounded_answer_rate": 0.785,
+      "grounded_ci_low": 0.7229757022632792,
+      "grounded_ci_high": 0.836282074363278,
+      "chunk_hit_rate": 0.915,
+      "flag_when_retrieval_hit": 0.09467455621301775,
+      "flag_when_retrieval_miss": 0.3333333333333333,
+      "control_flag_rate": 0.8737373737373737,
+      "real_flag_rate": 0.11616161616161616,
+      "unanswerable_abstention_rate": 0.425,
+      "unanswerable_flag_rate": 0.21739130434782608
     }
   },
   "paired_comparisons": [
@@ -154,6 +172,13 @@
       "a_only": 0,
       "b_only": 0,
       "p_value": 1.0
+    },
+    {
+      "a": "phi3_k3_tok64",
+      "b": "phi3_k3_tok64_bm25",
+      "a_only": 9,
+      "b_only": 34,
+      "p_value": 0.00017015517460094998
     }
   ]
 }

@@ -15,9 +15,9 @@ Resume: already-answered question ids are skipped, so re-running after an
 interruption continues where it stopped.
 
 Usage
------
-    python3 run_config_grid.py phi3 3 64
-    python3 run_config_grid.py flan-base 3 64
+  python3 run_config_grid.py phi3 3 64
+  python3 run_config_grid.py flan-base 3 64
+  python3 run_config_grid.py phi3 3 64 bm25    # sparse retrieval instead
 """
 import contextlib
 import io
@@ -71,15 +71,23 @@ def load_done(path: Path) -> set[str]:
 
 
 def main() -> None:
-    if len(sys.argv) != 4:
+    if len(sys.argv) not in (4, 5):
         raise SystemExit("usage: run_config_grid.py <generator> <top_k> "
-                         "<max_new_tokens>")
+                         "<max_new_tokens> [dense|bm25]")
 
     generator_name = sys.argv[1]
     top_k = int(sys.argv[2])
     max_new_tokens = int(sys.argv[3])
+    retriever_name = sys.argv[4] if len(sys.argv) == 5 else "dense"
 
-    config_id = f"{generator_name}_k{top_k}_tok{max_new_tokens}"
+    if retriever_name not in ("dense", "bm25"):
+        raise SystemExit(f"unknown retriever: {retriever_name}")
+
+    # The retriever appears in the id only when it is not the default, so the
+    # six dense configurations keep the filenames they were analysed under.
+    suffix = "" if retriever_name == "dense" else f"_{retriever_name}"
+    config_id = f"{generator_name}_k{top_k}_tok{max_new_tokens}{suffix}"
+
     output_path = GRID_DIR / f"rag_{config_id}.jsonl"
     GRID_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -94,16 +102,27 @@ def main() -> None:
         return
 
     from config import CHUNKS_PATH, EMBEDDING_MODEL, INDEX_PATH
-    from rag.embedder import TextEmbedder
     from rag.pipeline import RAGPipeline
-    from rag.wiki_retriever import WikipediaRetriever
     from fast_generator import FastGenerator
 
-    retriever = WikipediaRetriever(
-        chunks_path=CHUNKS_PATH,
-        index_path=INDEX_PATH,
-        embedder=TextEmbedder(model_name=EMBEDDING_MODEL),
-    )
+    # Both retrievers expose the same two things this script needs: a
+    # retrieve(question, top_k) returning dicts with title/content/score, and a
+    # .chunks list in corpus order for looking up the gold chunk. Nothing
+    # downstream of here knows which one produced the evidence.
+    if retriever_name == "bm25":
+        from rag.bm25_retriever import BM25Retriever
+
+        print("Building the BM25 index over the corpus (a few minutes)...")
+        retriever = BM25Retriever(chunks_path=CHUNKS_PATH)
+    else:
+        from rag.embedder import TextEmbedder
+        from rag.wiki_retriever import WikipediaRetriever
+
+        retriever = WikipediaRetriever(
+            chunks_path=CHUNKS_PATH,
+            index_path=INDEX_PATH,
+            embedder=TextEmbedder(model_name=EMBEDDING_MODEL),
+        )
 
     pipeline = RAGPipeline(
         retriever=retriever,
@@ -169,7 +188,7 @@ def main() -> None:
                     "generator": generator_name,
                     "top_k": top_k,
                     "max_new_tokens": max_new_tokens,
-                    "retriever": "dense",
+                    "retriever": retriever_name,
                 },
             }
 
