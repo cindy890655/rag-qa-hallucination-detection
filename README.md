@@ -73,8 +73,15 @@ ahead of Flash-Lite (p = 2.2e-17).
 
 ## Part 2 — Scaled automatic evaluation of the RAG system
 
+The detection threshold was calibrated once, on the six dense configurations, and
+held fixed at 0.48 when BM25 was added. Re-deriving it from the enlarged pool would
+have moved the operating point for every configuration at once, leaving the
+retriever comparison confounded with a change of measurement, and would have
+invalidated the audit sample, which was drawn according to the verdicts at the old
+value.
+
 240 questions (200 answerable, 40 unanswerable) were generated from the RAG corpus and
-run through six configurations, giving **1,440 answers** scored automatically.
+run through seven configurations, giving **1,680 answers** scored automatically.
 
 Questions are generated from **non-lead** article chunks. A first attempt used article
 titles ("What is Antares?"); a 12-question pilot showed retrieval hit the gold article
@@ -87,11 +94,12 @@ among 390,742.
 | Configuration | Gold chunk retrieved | Abstained | Hallucination rate | Grounded answer rate |
 |---|---|---|---|---|
 | Phi-3, k=1 | 51.0% | 29.0% | 23.2% [17, 31] | 54.5% [48, 61] |
-| **Phi-3, k=3** | 69.5% | 23.0% | 14.3% [10, 21] | **66.0% [59, 72]** |
+| Phi-3, k=3 | 69.5% | 23.0% | 14.3% [10, 21] | 66.0% [59, 72] |
 | Phi-3, k=5 | 77.5% | 42.5% | 14.8% [9, 22] | 49.0% [42, 56] |
 | FLAN-base, k=3 | 69.5% | 2.0% | 25.5% [20, 32] | 73.0% [66, 79] |
 | FLAN-large, k=3 | 69.5% | 13.5% | 15.0% [10, 21] | 73.5% [67, 79] |
 | Phi-3, k=3, 128 tokens | 69.5% | 23.0% | 14.3% [10, 21] | 66.0% [59, 72] |
+| **BM25, Phi-3, k=3** | **91.5%** | 12.5% | **10.3% [7, 16]** | **78.5% [72, 84]** |
 
 95% Wilson intervals. Grounded answer rate = answered and not flagged, over all 200
 answerable questions. Configurations are compared with exact McNemar tests, valid
@@ -128,6 +136,22 @@ contradiction across retrieved chunks never reaches 0.5 (observed maximum 0.424)
 the contradiction half of the fusion rule adds exactly zero detections. On HaluEval it
 was the dominant signal; here the decision rests entirely on entailment.
 
+**Swapping the retriever changes more than any other single choice, and the
+evaluation set decides the winner.** BM25 finds the gold chunk for 91.5% of
+questions against 69.5% for dense, abstains half as often, and lowers the
+hallucination rate from 14.3% to 10.3% (McNemar p = 0.0002). This contradicts the
+retriever experiment on the 20 hand-written questions, where dense scored slightly
+higher. The two disagree because our questions were written by an LLM from a
+specific chunk and inherit its vocabulary: 70% of the words in a question also
+appear in its gold chunk, and 86% of questions share a term occurring in fewer
+than 0.1% of the corpus. A rare term is close to a unique key for BM25, while the
+embedder compresses a 100-word chunk into 384 dimensions and loses exactly that.
+The effect is measurable: on the 29 questions sharing no rare term BM25 leads by
+13.8 points, on the 132 sharing one or two it leads by 25.0. BM25 is genuinely
+better on this set, but the margin is inflated by how the set was built. Runtime
+runs the other way, 14.2 s per question against 2.4 s, because BM25 scores the
+query against all 390,742 chunks while FAISS performs an indexed lookup.
+
 **The LLM judge transfers without calibration.** On 168 answers from the Phi-3 k=3
 configuration, Llama 3.3 70B flags 100% of mismatched-evidence pairs (95% CI
 [97.8%, 100%]) and 14.3% of real ones, agreeing with the recalibrated NLI detector on
@@ -135,8 +159,9 @@ configuration, Llama 3.3 70B flags 100% of mismatched-evidence pairs (95% CI
 14.9%); the thirteen disagreements split six to seven, so the two methods are
 indistinguishable (McNemar p = 1.000). It needed no threshold and no calibration set.
 It also exhausted the entire daily free token allowance twice to cover those 168
-answers, where the NLI detector scored all 1,440 in 8.6 minutes locally — roughly a
+answers, where the NLI detector scored all 1,680 in 10.3 minutes locally — roughly a
 fiftyfold difference in cost for the same conclusion.
+
 
 ### Validity checks
 
@@ -150,6 +175,8 @@ evidence retrieved for a different question; those pairs cannot be supported.
 | Phi-3, k=5 | 13.9% | 85.4% | 11.9% | 35.7% |
 | FLAN-base, k=3 | 27.5% | 90.1% | 10.1% | 63.2% |
 | FLAN-large, k=3 | 15.2% | 89.4% | 8.3% | 37.5% |
+| Phi-3, k=3, 128 tokens | 14.4% | 92.8% | 9.2% | 41.7% |
+| BM25, Phi-3, k=3 | 11.6% | 87.4% | 9.5% | 33.3% |
 
 The detector flags mismatched evidence 64–76 points more often than real evidence, and
 retrieval misses 21–52 points more often than hits. Both orderings are what a working
@@ -288,7 +315,7 @@ tests/                     51 unit tests, one file per module
 
 data/rag_eval/
   questions_large.json     240 questions with gold chunk indices
-  grid/                    1,440 RAG answers, one file per configuration
+  grid/                    1,680 RAG answers, one file per configuration
   scored/                  detector verdicts and negative controls
   llm_judge/               LLM judge verdicts on RAG output
   analysis/                config_metrics.csv, summary.json, calibration.json
