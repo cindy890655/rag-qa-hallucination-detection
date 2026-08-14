@@ -5,9 +5,10 @@ Two differences from the detector's default usage, both needed at this scale:
 
 1.  Chunk-wise scoring. detect_fusion() concatenates all retrieved chunks into
     one premise, but DeBERTa truncates at 512 tokens, and at k=5 the retrieved
-    text is 826 tokens - so a third of the evidence would silently vanish and
-    k=5 would look artificially unsupported. Each chunk is therefore scored
-    separately and the answer counts as grounded when ANY chunk supports it.
+    text averages 659 DeBERTa tokens and exceeds 512 on every question - so a
+    fifth of the evidence would silently vanish and k=5 would look artificially
+    unsupported. Each chunk is therefore scored separately and the answer counts
+    as grounded when ANY chunk supports it.
 
 2.  A negative control. Every answer is scored a second time against the
     evidence retrieved for a DIFFERENT question. Those pairs are unsupported by

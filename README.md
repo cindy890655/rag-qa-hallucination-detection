@@ -117,24 +117,34 @@ tokens (325) than k=3 (361) and abstains on 42.5% of questions.
 
 **A weaker generator looks more useful and is less trustworthy.** Abstention tracks
 model capability exactly: FLAN-base 2.0% < FLAN-large 13.5% < Phi-3 23.0%. FLAN-base
-therefore produces the most usable answers (73.0% grounded) and the most
-hallucinations (25.5%). On unanswerable questions it answers 37 of 40, and 38% of
+therefore answers the most questions (196 of 200) and produces the most
+hallucinations (25.5%), while its grounded answer rate is indistinguishable from
+FLAN-large's (73.0% against 73.5%, McNemar p = 1.0) — answering more often buys no
+additional grounded answers. On unanswerable questions it answers 37 of 40, and 38% of
 those are flagged, against 15% for Phi-3.
 
-**The answer-length budget does nothing.** 64 and 128 tokens produce byte-identical
-output (0 discordant pairs under McNemar) because answers average 3.8 words and never
-reach the cap.
+**The answer-length budget does nothing measurable.** 64 and 128 tokens give the same
+answer on 239 of 240 questions and identical metrics on all 200 answerable ones
+(0 discordant pairs under McNemar). Answers are short — median 2 words, mean 5.3 — so
+the cap rarely binds. The one exception is an unanswerable definitional question whose
+64-token answer is cut off mid-sentence, and it falls outside the comparison.
 
 **Benchmark thresholds do not transfer.** The threshold tuned on HaluEval
 (entailment < 0.3) flags only 5.5% of answers paired with evidence retrieved for a
-different question — pairs that are unsupported by construction. Recalibrating against
-those known negatives moves the threshold to **0.48**, which catches 90% of them. Under
-the old threshold the measured hallucination rate was about 1%, which was an artefact.
+different question — pairs that are unsupported by construction. (5.5% is pooled over
+the six dense configurations the threshold was calibrated on; including BM25 it is
+4.8%.) Those pairs cluster around 0.42, with 86% of them between 0.30 and 0.48.
+Recalibrating against them moves the threshold to **0.48**, which catches 90% (91.1%
+on the dense pool). Under the old threshold the measured hallucination rate was 1.7%
+pooled — under 1% on the k=3 configurations but 6.3% at k=1 — which was an artefact.
 
-**The contradiction signal stops working on multi-chunk evidence.** Taking the minimum
-contradiction across retrieved chunks never reaches 0.5 (observed maximum 0.424), so
-the contradiction half of the fusion rule adds exactly zero detections. On HaluEval it
-was the dominant signal; here the decision rests entirely on entailment.
+**The contradiction signal stops working on multi-chunk evidence.** Across the 1,680
+answers the minimum contradiction across retrieved chunks crosses 0.5 only 8 times —
+six at k=1, where the minimum degenerates to a single chunk, and two on FLAN-base at
+k=3 — and the entailment rule already flags all eight, so the contradiction half of
+the fusion rule adds exactly zero detections. On the Phi-3 multi-chunk configurations
+it never exceeds 0.43. On HaluEval it was the dominant signal; here the decision rests
+entirely on entailment.
 
 **Swapping the retriever changes more than any other single choice, and the
 evaluation set decides the winner.** BM25 finds the gold chunk for 91.5% of
@@ -146,11 +156,11 @@ specific chunk and inherit its vocabulary: 70% of the words in a question also
 appear in its gold chunk, and 86% of questions share a term occurring in fewer
 than 0.1% of the corpus. A rare term is close to a unique key for BM25, while the
 embedder compresses a 100-word chunk into 384 dimensions and loses exactly that.
-The effect is measurable: on the 29 questions sharing no rare term BM25 leads by
-13.8 points, on the 132 sharing one or two it leads by 25.0. BM25 is genuinely
-better on this set, but the margin is inflated by how the set was built. Runtime
-runs the other way, 14.2 s per question against 2.4 s, because BM25 scores the
-query against all 390,742 chunks while FAISS performs an indexed lookup.
+The effect is measurable: on the 29 questions sharing no rare term BM25's gold-chunk
+retrieval rate leads by 13.8 points, on the 132 sharing one or two it leads by 25.0.
+BM25 is genuinely better on this set, but the margin is inflated by how the set was
+built. Runtime runs the other way, 14.2 s per question against 2.5 s, because BM25
+scores the query against all 390,742 chunks while FAISS performs an indexed lookup.
 
 **The LLM judge transfers without calibration.** On 168 answers from the Phi-3 k=3
 configuration, Llama 3.3 70B flags 100% of mismatched-evidence pairs (95% CI
@@ -159,9 +169,8 @@ configuration, Llama 3.3 70B flags 100% of mismatched-evidence pairs (95% CI
 14.9%); the thirteen disagreements split six to seven, so the two methods are
 indistinguishable (McNemar p = 1.000). It needed no threshold and no calibration set.
 It also exhausted the entire daily free token allowance twice to cover those 168
-answers, where the NLI detector scored all 1,680 in 10.3 minutes locally — roughly a
-fiftyfold difference in cost for the same conclusion.
-
+answers, where the NLI detector scored all 1,680 in about ten minutes locally — ten
+times the answers, with no API and no quota, for the same conclusion.
 
 ### Validity checks
 
@@ -178,8 +187,8 @@ evidence retrieved for a different question; those pairs cannot be supported.
 | Phi-3, k=3, 128 tokens | 14.4% | 92.8% | 9.2% | 41.7% |
 | BM25, Phi-3, k=3 | 11.6% | 87.4% | 9.5% | 33.3% |
 
-The detector flags mismatched evidence 64–76 points more often than real evidence, and
-retrieval misses 21–52 points more often than hits. Both orderings are what a working
+The detector flags mismatched evidence 63–78 points more often than real evidence, and
+retrieval misses 24–53 points more often than hits. Both orderings are what a working
 detector must produce, and neither is guaranteed by construction.
 
 ## Part 3 — Human validation
@@ -231,7 +240,8 @@ onto each other (medians 0.423 and 0.406). RAG answers are frequently bare fragm
 such as "2002" or "Helam", for which entailment is undefined without the question.
 Wrapping the pair into a declarative sentence raises the AUC further to 0.886,
 consistent with the model having been trained on declarative hypotheses; this is left
-as future work, as the gain changes no conclusion here.
+as future work, as the gain changes no conclusion here. These figures were measured
+once during development and the script is not kept in the repository.
 
 ## Limitations
 
@@ -244,7 +254,7 @@ the LLM judge included. Detecting this needs a relevance signal.
 
 **The unanswerable set was verified only at the title level.** A question was accepted
 as unanswerable if no article carried its subject as a title. That check is too weak:
-"Beatles" appears in 392 chunks and "George Lucas" in 145. The vaccine question was
+"Beatles" appears in 392 chunks and "George Lucas" in 83. The vaccine question was
 answered verbatim and correctly from the Immune system article. Rates on the
 unanswerable subset are reported as-is and not read as hallucination rates.
 
@@ -256,7 +266,8 @@ where the passage records 1989. Both answers remain correct and supported.
 **Calibrating on synthetic negatives is not the same as calibrating on real
 hallucinations.** Evidence-swap pairs are easy: 90% fall below 0.48. Real hallucinations
 sit in the overlap region above it. Against the human labels, raising the threshold to
-0.60 buys 0.08 of recall for 0.10 of precision and a doubled false positive rate. The
+0.60 buys 0.08 of recall for 0.10 of precision and a doubled false positive rate
+(measured once during development; the sweep is not kept in the repository). The
 threshold was left at 0.48 because it was fixed before the human labels existed;
 re-tuning on the same thirty items that measure performance would be circular.
 
@@ -265,7 +276,7 @@ free-tier daily token limit was reached on two consecutive days), pilot labels n
 
 ## Repository layout
 
-```
+```text
 demo.py                    stand-alone demonstration: runs the detector live,
                            then prints every headline result from saved files
 
@@ -341,7 +352,7 @@ python3 demo.py
 ```
 
 It loads the detector, judges four examples live, then prints the benchmark results,
-the six-configuration comparison and the audit calibration from the saved analysis
+the seven-configuration comparison and the audit calibration from the saved analysis
 files. About half a minute.
 
 Unit tests, from the project root:
@@ -378,9 +389,13 @@ export GEMINI_API_KEY='...'
 python3 build_question_bank.py
 python3 run_config_grid.py phi3 3 64      # repeat per configuration
 python3 score_grid.py
-python3 analyze_grid.py
+python3 analyze_grid.py --threshold 0.48
 python3 plot_grid.py
 ```
+
+`--threshold 0.48` reproduces the numbers above. Without it the script recalibrates on
+all seven configurations, which moves the operating point and changes every
+configuration at once — correct for a new corpus, wrong for reproducing these results.
 
 Part 3, human validation:
 
@@ -408,4 +423,6 @@ python3 llm_judge_grid.py phi3_k3_tok64
   script; the analysis recalibrates the threshold and applies it to `best_entailment`.
 - The detection threshold is never hardcoded. `analyze_grid.py` derives it from the
   negative control at every run and records it in `analysis/summary.json`, so a
-  different corpus or generator recalibrates automatically.
+  different corpus or generator recalibrates automatically. The reported results use
+  `--threshold 0.48`, the value calibrated on the six dense configurations before BM25
+  was added.

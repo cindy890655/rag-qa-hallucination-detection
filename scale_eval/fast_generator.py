@@ -13,7 +13,8 @@ large-scale config grid finish in reasonable time:
     resident, accelerate decides the model does not fit and silently offloads
     part of it to disk; every generated token then streams weights off the SSD.
     Measured on an M2 Pro with 16 GB: 80-195 s per question with
-    device_map="auto", versus ~5 s per question when loaded explicitly.
+    device_map="auto", versus 2.5 s per question when loaded explicitly
+    (mean over the 240-question k=3 grid run).
 
 2.  The KV cache is released after every answer. Without that, generation on
     16 GB of unified memory degrades question after question (measured:

@@ -4,9 +4,9 @@ Turn the scored grid into the 4b-2 result tables.
 The detection threshold is not hardcoded. The threshold that was tuned on
 HaluEval (entailment < 0.3) does not transfer to this setting: RAG evidence is
 several chunks, the support signal is the maximum entailment across them, and
-mismatched-evidence pairs cluster around 0.42 - entirely above 0.3. Using 0.3
-therefore flags almost nothing and reports a hallucination rate near 1%, which
-is an artefact.
+mismatched-evidence pairs cluster around 0.42, with only 5.5% of them below 0.3.
+Using 0.3 therefore flags almost nothing and reports a pooled hallucination rate
+of 1.7%, under 1% on the k=3 configurations, which is an artefact.
 
 Instead the threshold is calibrated on the negative control. Every answer was
 also scored against the evidence retrieved for a different question; those pairs
@@ -14,10 +14,12 @@ are unsupported by construction, so they act as known positives. The threshold
 is the lowest one at which the detector catches TARGET_CONTROL_RECALL of them.
 
 Only entailment is used. The contradiction half of the fusion rule adds exactly
-zero detections here, because the minimum contradiction across several chunks is
-almost always near zero (observed maximum 0.424, never reaching 0.5). On
-HaluEval contradiction was the dominant signal; on multi-chunk RAG evidence it
-is diluted away and entailment carries the decision.
+zero detections here: across the 1,680 answers the minimum contradiction crosses
+0.5 only 8 times - six at k=1, where the minimum degenerates to a single chunk,
+and two on flan-base at k=3 - and the entailment rule already flags all eight.
+On the phi3 multi-chunk configurations it never exceeds 0.43. On HaluEval
+contradiction was the dominant signal; on multi-chunk RAG evidence it is diluted
+away and entailment carries the decision.
 
 Outputs
 -------

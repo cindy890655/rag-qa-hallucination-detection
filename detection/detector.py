@@ -49,9 +49,12 @@ class HallucinationDetector:
     def detect(self, knowledge, question, answer, threshold=0.5):
         """
         Signal = contradiction probability.
-        With the DeBERTa-FEVER model, faithful answers score near 0 and
-        hallucinated answers score near 1 on contradiction, so a midpoint
-        threshold cleanly separates them.
+        Faithful answers do score near 0 (median 0.002), but the hallucinated
+        ones are bimodal: median 0.785, yet 39% of them still fall below 0.1,
+        because the evidence fails to support them rather than refuting them.
+        A midpoint threshold therefore catches only the refuted half, which is
+        why recall stops at 0.535 on HaluEval and why detect_fusion() below
+        adds the entailment signal.
 
         hallucinated (1) iff P(contradiction) >= threshold, else faithful (0).
 

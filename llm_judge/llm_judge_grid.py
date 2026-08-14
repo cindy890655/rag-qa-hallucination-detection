@@ -13,9 +13,9 @@ expensive LLM judge does not.
 Deliberate difference from llm_judge_groq.py: the QUESTION is included in the
 prompt. On HaluEval the answers are full sentences ("First for Women was started
 first"), so evidence plus answer is enough to judge. RAG answers here average
-3.8 words and are often a bare year or name - judging whether "2002" is
-"supported" by a passage is meaningless without knowing what was asked, and any
-passage containing a year would pass. The NLI detector already sees the question
+5.3 words with a median of 2, and are often a bare year or name - judging
+whether "2002" is "supported" by a passage is meaningless without knowing what
+was asked, and any passage containing a year would pass. The NLI detector already sees the question
 (its hypothesis is question + answer), so withholding it from the LLM would
 handicap one method and invalidate the comparison.
 
