@@ -65,11 +65,18 @@ def figure_calibration(summary, pooled):
              label="real retrieved evidence")
     ax1.axvline(0.3, color=GREY, ls="--", lw=1.5)
     ax1.axvline(chosen, color="red", ls=":", lw=2)
-    ax1.annotate("threshold tuned on\nHaluEval (0.30):\ncatches only 5.5%",
-                 xy=(0.3, 5.5), xytext=(0.05, 62), fontsize=9, color=GREY,
+
+    # Both figures quote what the threshold actually catches on the pool being
+    # plotted, rather than a number typed in when the grid was smaller.
+    at_old = np.mean([r["control_best_entailment"] < 0.3 for r in pooled]) * 100
+    at_new = np.mean([r["control_best_entailment"] < chosen for r in pooled]) * 100
+
+    ax1.annotate(f"threshold tuned on\nHaluEval (0.30):\n"
+                 f"catches only {at_old:.1f}%",
+                 xy=(0.3, at_old), xytext=(0.05, 62), fontsize=9, color=GREY,
                  arrowprops=dict(arrowstyle="->", color=GREY))
-    ax1.annotate(f"calibrated ({chosen:.2f}):\ncatches 90%",
-                 xy=(chosen, 90), xytext=(0.55, 55), fontsize=9, color="red",
+    ax1.annotate(f"calibrated ({chosen:.2f}):\ncatches {at_new:.0f}%",
+                 xy=(chosen, at_new), xytext=(0.55, 55), fontsize=9, color="red",
                  arrowprops=dict(arrowstyle="->", color="red"))
     ax1.set_xlabel("max-entailment threshold")
     ax1.set_ylabel("flagged as hallucinated (%)")
@@ -130,9 +137,9 @@ def figure_configs(summary):
     ax1.bar_label(b2, fmt="%.0f", padding=8, fontsize=8)
     ax1.set_ylabel("percent")
     ax1.set_ylim(0, 100)
-    ax1.set_title("Automatic evaluation of 6 RAG configurations "
-                  "(200 questions each, 95% Wilson CI)",
-                  fontsize=12, fontweight="bold")
+    ax1.set_title(f"Automatic evaluation of {len(names)} RAG configurations "
+                  f"(200 questions each, 95% Wilson CI)",
+                  fontsize=13, fontweight="bold")
     ax1.legend(fontsize=9)
     ax1.grid(axis="y", alpha=0.3)
 
@@ -147,8 +154,9 @@ def figure_configs(summary):
                      xytext=(0, -14), ha="center", fontsize=8, color=PURPLE)
     ax2.set_ylabel("percent")
     ax2.set_ylim(0, 100)
-    ax2.set_title("The mechanism: k=5 retrieves best yet abstains most, "
-                  "because the 512-token prompt budget truncates each chunk",
+    ax2.set_title("The mechanism: k=5 retrieves better than k=3 yet abstains "
+                  "most, because the 512-token prompt budget truncates each "
+                  "chunk; BM25 retrieves best of all",
                   fontsize=11)
     ax2.set_xticks(x)
     ax2.set_xticklabels([SHORT_NAME[n] for n in names], fontsize=9)

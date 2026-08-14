@@ -124,7 +124,7 @@ def chart(results: dict[str, dict], common_n: int) -> None:
                   fmt="none", ecolor="black", capsize=3, linewidth=1)
 
     axis.axhline(y=0.5, color="red", linestyle=":", alpha=0.4, linewidth=1)
-    axis.text(len(names) - 0.5, 0.51, "chance", fontsize=7, color="red",
+    axis.text(len(names) - 0.65, 0.51, "chance", fontsize=7, color="red",
               ha="right")
 
     axis.set_ylabel("Score")
